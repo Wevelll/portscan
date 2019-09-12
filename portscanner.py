@@ -1,7 +1,7 @@
 import socket
 import sys
 
-
+#ports taken from https://kb.justhost.ru/article/1150
 
 def scan_ports(host, ports):
     print ('scanning...')
