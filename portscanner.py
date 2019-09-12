@@ -4,20 +4,22 @@ import sys
 
 def scan_ports(addr):
     print ('scanning...')
-    try:
-        for port in range(1, 16535):
-            s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
-            s.settimeout(0.01)
+    for port in range(1, 1024):
+        s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
+        s.settimeout(0.5)
+        try:
             result = s.connect_ex((addr, port))
             if result == 0:
                 print ('port {}: open'.format(port))
+            else:
+                print ('port {}: closed'.format(port))
             s.close()
-    except socket.gaierror:
-        print ("hostname not resolved")
-        return
-    except socket.error:
-        print ("couldn't connect")
-        return
+        except socket.gaierror:
+            print ('hostname not resolved')
+            return
+        except socket.error:
+            print ("couldn't connect")
+            return
 
 
 def main():
