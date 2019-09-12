@@ -4,7 +4,7 @@ import sys
 #ports taken from https://kb.justhost.ru/article/1150
 
 def scan_ports(host, ports):
-    print ('scanning...')
+    print ('scanning {}...'.format(host))
     for port in ports.keys():
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(0.5)
@@ -12,8 +12,8 @@ def scan_ports(host, ports):
             result = s.connect_ex((host, port))
             if result == 0:
                 print ('[+]port {0} {1}: open'.format(port, ports[port]))
-            else:
-                print ('[-]port {0} {1}: closed'.format(port, ports[port]))
+#            else:
+#print ('[-]port {0} {1}: closed'.format(port, ports[port]))
             s.close()
         except socket.gaierror:
             print ('hostname not resolved')
