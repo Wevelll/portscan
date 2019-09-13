@@ -1,19 +1,16 @@
 import socket
 import sys
 
-#ports taken from https://kb.justhost.ru/article/1150
-
 def scan_ports(host, ports):
+    avialiable_ports = list()
     print ('scanning {}...'.format(host))
-    for port in ports.keys():
+    for port in ports:
         s = socket.socket(socket.AF_INET, socket.SOCK_STREAM)
         s.settimeout(0.5)
         try:
             result = s.connect_ex((host, port))
             if result == 0:
-                print ('[+]port {0} {1}: open'.format(port, ports[port]))
-#            else:
-#print ('[-]port {0} {1}: closed'.format(port, ports[port]))
+                avialiable_ports.append(port)
             s.close()
         except socket.gaierror:
             print ('hostname not resolved')
@@ -21,22 +18,33 @@ def scan_ports(host, ports):
         except socket.error:
             print ("couldn't connect")
             return
+    return avialiable_ports
+
+
+def check_argv(argv):
+    data = { 'full_scan': False, 'hosts': list() }
+    for arg in argv:
+        if arg == '-a':
+            data['full_scan'] = True
+        else:
+            data['hosts'].append(arg)
+    return data
 
 
 def main():
+# most popular ports by https://kb.justhost.ru/article/1150
     ports = {20: 'FTP', 21: 'FTP', 22: 'SSH', 23: 'telnet', 25: 'SMTP',  53: 'DNS', 80: 'HTTP', 110: 'POP3', 143: 'IMAP', 443: 'HTTPS', 587: 'SMTP', 993: 'IMAP-SSL', 995: 'POP3S', 2083: 'cPanel(user)', 2087: 'cPanel(admin)', 2222: 'DirectAdmin',3128: 'HTTP-PROXY', 3306: 'MySQL', 8080: 'HTTP-PROXY', 8083: 'Vesta'}
-    if (len(sys.argv) < 2):
-        host = input('No cl args, input hostname: ')
-        scan_ports(host, ports)
-    else:
-        hosts = sys.argv
-        hosts.remove(sys.argv[0])
-        if '-a' in sys.argv:
-            ports = range(1, 1024)
-            hosts.remove('-a')
-        for host in hosts:
-            scan_ports(host, ports)
 
+    data = check_argv(sys.argv[1:])
+    if not data['hosts']:
+        data['hosts'] = input('No hosts given, give one: ')
+    if data['full_scan']:
+        ports = range(1, 1024)
+    for host in data['hosts']:
+        result = scan_ports(host, ports)
+    for port in result:
+        print ('[+]port {} {}: open'.format(port, ports[port]))
+    print ('\n[*] total ports scanned: {0}\n[*] open ports: {1}\n[*] closed ports: {2}'.format(len(ports), len(result), (len(ports) - len(result))))
 
 if __name__ == '__main__':
     main()
