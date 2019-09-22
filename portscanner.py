@@ -37,7 +37,11 @@ def check_argv(argv):
 
 def print_result(result, ports):
     for port in result:
-        print ('[+] Port {} {}: open'.format(port, ports[port]))
+# rewrite for -a
+        if port in ports.keys():
+            print ('[+] Port {} {}: open'.format(port, ports[port]))
+        else:
+            print ('[+] Port {}: open'.format(port)
     print ('[>]\n[*] Total ports scanned: {0}\n[*] open ports: {1}\n[*] closed ports: {2}'.format(len(ports), len(result), (len(ports) - len(result))))
 
 
