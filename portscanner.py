@@ -1,3 +1,4 @@
+#!/bin/python3
 import socket
 import time
 import sys
@@ -41,7 +42,7 @@ def print_result(result, ports):
         if port in ports.keys():
             print ('[+] Port {} {}: open'.format(port, ports[port]))
         else:
-            print ('[+] Port {}: open'.format(port)
+            print ('[+] Port {}: open'.format(port))
     print ('[>]\n[*] Total ports scanned: {0}\n[*] open ports: {1}\n[*] closed ports: {2}'.format(len(ports), len(result), (len(ports) - len(result))))
 
 
